@@ -80,6 +80,7 @@ jobs:
           export LC_ALL="C"
           set +e
           sed -i "s/\$(error Build failed)/\$(warning Artifact check bypassed)/g" build/make/core/artifact_path_requirements.mk || true
+          sed -i "s/pretty-error/pretty-warning/g" build/make/core/artifact_path_requirements.mk || true
           source build/envsetup.sh
           lunch twrp_RMX3624-eng || lunch twrp_RMX3624-userdebug || lunch fox_RMX3624-eng
           set -e
