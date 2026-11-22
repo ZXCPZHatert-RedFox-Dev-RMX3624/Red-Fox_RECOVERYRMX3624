@@ -55,7 +55,7 @@ jobs:
           "
           mkdir -p $GITHUB_WORKSPACE/recovery/root/system/bin $GITHUB_WORKSPACE/recovery/root/lib $GITHUB_WORKSPACE/recovery/root/usr/lib $GITHUB_WORKSPACE/recovery/root/etc/ssl
           sudo cp /tmp/alpine_arm64/usr/bin/links $GITHUB_WORKSPACE/recovery/root/system/bin/links
-          sudo cp /tmp/alpine_arm64/usr/bin/curl $GITHUB_WORKSPACE/recovery/root/system/bin/curl
+          sudo cp /tmp/alpine_arm64/usr/bin/curl-static $GITHUB_WORKSPACE/recovery/root/system/bin/curl
           sudo cp -a /tmp/alpine_arm64/lib/ld-musl-aarch64.so.1 /tmp/alpine_arm64/lib/libz.so* /tmp/alpine_arm64/lib/libcrypto.so* /tmp/alpine_arm64/lib/libssl.so* $GITHUB_WORKSPACE/recovery/root/lib/ || true
           sudo cp -a /tmp/alpine_arm64/usr/lib/libevent*.so* /tmp/alpine_arm64/usr/lib/libbrotli*.so* /tmp/alpine_arm64/usr/lib/libzstd*.so* /tmp/alpine_arm64/usr/lib/libbz2*.so* /tmp/alpine_arm64/usr/lib/liblzma*.so* /tmp/alpine_arm64/usr/lib/libgpm*.so* $GITHUB_WORKSPACE/recovery/root/usr/lib/ || true
           sudo cp -r /tmp/alpine_arm64/etc/ssl/* $GITHUB_WORKSPACE/recovery/root/etc/ssl/ || true
