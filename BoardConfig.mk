@@ -1,3 +1,8 @@
+
+TARGET_SCREEN_WIDTH := 720
+TARGET_SCREEN_HEIGHT := 1600
+TW_THEME := portrait_hdpi
+
 #
 # Copyright (C) 2022 The Android Open Source Project
 # Copyright (C) 2022 SebaUbuntu's TWRP device tree generator
