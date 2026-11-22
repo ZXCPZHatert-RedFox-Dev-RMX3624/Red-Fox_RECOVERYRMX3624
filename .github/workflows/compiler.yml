@@ -78,12 +78,10 @@ jobs:
           export TW_MAX_BRIGHTNESS=255
           export TW_DEFAULT_BRIGHTNESS=120
           export LC_ALL="C"
-          set +e
           sed -i "s/\$(error Build failed)/\$(warning Artifact check bypassed)/g" build/make/core/artifact_path_requirements.mk || true
           : > build/make/core/artifact_path_requirements.mk
           source build/envsetup.sh
           lunch twrp_RMX3624-eng || lunch twrp_RMX3624-userdebug || lunch fox_RMX3624-eng
-          set -e
           mka recoveryimage -j$(nproc --all)
           mkdir -p /tmp/out_img
           ls -lh "$FOX_DIR/out/target/product/"*/; cp "$FOX_DIR/out/target/product/"*/*.img "$FOX_DIR/out/target/product/"*/*.zip /tmp/out_img/ 2>/dev/null || true; ls -lh /tmp/out_img/
