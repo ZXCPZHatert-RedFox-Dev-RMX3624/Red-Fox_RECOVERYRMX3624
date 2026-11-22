@@ -1,9 +1,6 @@
 #!/sbin/sh
-URL="${1:-http://example.com}"
-export TERM=linux
-
-FB_DEV="/dev/graphics/fb0"
-[ ! -e "$FB_DEV" ] && FB_DEV="/dev/fb0"
-
-echo "[RedFox Browser] Запуск графического режима на $FB_DEV -> $URL"
-exec /system/bin/links -driver fb -mode 720x1600x32 "$URL"
+URL="${1:-https://duckduckgo.com}"
+export SSL_CERT_DIR=/etc/ssl/certs
+export LD_LIBRARY_PATH=/lib:/usr/lib
+export TERM=xterm
+exec /system/bin/links "$URL"
