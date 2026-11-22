@@ -86,7 +86,7 @@ jobs:
           set -e
           mka recoveryimage -j$(nproc --all)
           mkdir -p /tmp/out_img
-          ls -la "$FOX_DIR/out/target/product/"*; find "$FOX_DIR/out" -type f \( -name "recovery.img" -o -name "vendor_boot.img" -o -name "boot.img" -o -name "OrangeFox*.img" -o -name "OrangeFox*.zip" \) -exec cp {} /tmp/out_img/ \;; ls -lh /tmp/out_img/
+          ls -lh "$FOX_DIR/out/target/product/"*/; cp "$FOX_DIR/out/target/product/"*/*.img "$FOX_DIR/out/target/product/"*/*.zip /tmp/out_img/ 2>/dev/null || true; ls -lh /tmp/out_img/
 
       - name: Upload Red-Fox Recovery Artifact
         uses: actions/upload-artifact@v4
