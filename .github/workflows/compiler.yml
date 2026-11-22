@@ -41,21 +41,30 @@ jobs:
           cd ~/fox_sync
           ./orangefox_sync.sh --branch 12.1 --path ~/work/OrangeFox
 
-      - name: Build Static ARM64 Graphical Browser (Links + Framebuffer)
+      - name: Build Static ARM64 Graphical Browser (Links + SSL + Framebuffer) & HTTPS Curl
         run: |
-          mkdir -p /tmp/browser_build && cd /tmp/browser_build
-          curl -L "https://musl.cc/aarch64-linux-musl-cross.tgz" -o musl.tgz
-          tar -xzf musl.tgz
-          export PATH="/tmp/browser_build/aarch64-linux-musl-cross/bin:$PATH"
-          curl -L "http://links.twibright.com/download/links-2.30.tar.bz2" -o links.tar.bz2
-          tar -xjf links.tar.bz2
-          cd links-2.30
-          CC="aarch64-linux-musl-gcc -static" ./configure --host=aarch64-linux-musl --enable-graphics --with-fb --without-x --without-ssl --disable-utf8
-          make -j$(nproc --all)
-          aarch64-linux-musl-strip links
+          sudo apt-get install -y qemu-user-static
+          mkdir -p /tmp/alpine_arm64 && cd /tmp/alpine_arm64
+          curl -L "https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/aarch64/alpine-minirootfs-3.20.3-aarch64.tar.gz" -o alpine.tar.gz
+          sudo tar -xzf alpine.tar.gz
+          sudo cp /usr/bin/qemu-aarch64-static usr/bin/
+          sudo cp /etc/resolv.conf etc/resolv.conf
+          sudo chroot /tmp/alpine_arm64 /bin/sh -c "
+            apk update &&
+            apk add --no-cache build-base openssl-dev openssl-libs-static zlib-dev zlib-static linux-headers curl-static xz &&
+            cd /tmp &&
+            wget http://links.twibright.com/download/links-2.30.tar.bz2 -O links.tar.bz2 &&
+            tar -xjf links.tar.bz2 &&
+            cd links-2.30 &&
+            LDFLAGS="-static" ./configure --enable-graphics --with-fb --without-x --with-ssl --disable-utf8 &&
+            make -j$(nproc --all) &&
+            strip links
+          "
           mkdir -p $GITHUB_WORKSPACE/recovery/root/system/bin
-          cp links $GITHUB_WORKSPACE/recovery/root/system/bin/links
-          chmod 755 $GITHUB_WORKSPACE/recovery/root/system/bin/links
+          sudo cp /tmp/alpine_arm64/tmp/links-2.30/links $GITHUB_WORKSPACE/recovery/root/system/bin/links
+          sudo cp /tmp/alpine_arm64/usr/bin/curl $GITHUB_WORKSPACE/recovery/root/system/bin/curl
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE/recovery/root/system/bin
+          chmod 755 $GITHUB_WORKSPACE/recovery/root/system/bin/links $GITHUB_WORKSPACE/recovery/root/system/bin/curl
 
       - name: Build Red-Fox Recovery
         run: |
