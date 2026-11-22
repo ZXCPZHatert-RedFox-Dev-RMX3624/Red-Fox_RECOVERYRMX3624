@@ -38,12 +38,12 @@ jobs:
       - name: Build Static ARM64 Graphical Browser (Links + Framebuffer)
         run: |
           mkdir -p /tmp/browser_build && cd /tmp/browser_build
-          curl -L "https://musl.cc" -o musl.tgz
+          curl -L "https://musl.cc/aarch64-linux-musl-cross.tgz" -o musl.tgz
           tar -xzf musl.tgz
           export PATH="/tmp/browser_build/aarch64-linux-musl-cross/bin:$PATH"
-          curl -L "http://twibright.com" -o links.tar.bz2
+          curl -L "http://links.twibright.com/download/links-2.30.tar.bz2" -o links.tar.bz2
           tar -xjf links.tar.bz2
-          cd links-2.29
+          cd links-2.30
           CC="aarch64-linux-musl-gcc -static" ./configure --host=aarch64-linux-musl --enable-graphics --with-fb --without-x --without-ssl --disable-utf8
           make -j$(nproc --all)
           aarch64-linux-musl-strip links
