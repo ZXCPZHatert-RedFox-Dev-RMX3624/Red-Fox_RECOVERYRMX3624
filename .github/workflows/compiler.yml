@@ -63,19 +63,24 @@ jobs:
           chmod 755 $GITHUB_WORKSPACE/recovery/root/system/bin/links $GITHUB_WORKSPACE/recovery/root/system/bin/curl
 
       - name: Build Red-Fox Recovery
+        shell: bash
         run: |
-          mkdir -p ~/work/OrangeFox/device/realme/RMX3624
-          cp -r $GITHUB_WORKSPACE/* ~/work/OrangeFox/device/realme/RMX3624/
-          cd ~/work/OrangeFox
+          FOX_DIR=~/work/OrangeFox
+          [ -d "$FOX_DIR/fox_12.1/build" ] && FOX_DIR="$FOX_DIR/fox_12.1"
+          mkdir -p "$FOX_DIR/device/realme/RMX3624"
+          rsync -a --exclude=".git" "$GITHUB_WORKSPACE/" "$FOX_DIR/device/realme/RMX3624/"
+          cd "$FOX_DIR"
           export ALLOW_MISSING_DEPENDENCIES=true
           export FOX_BUILD_DEVICE=RMX3624
           export LC_ALL="C"
           source build/envsetup.sh
           lunch twrp_RMX3624-eng
           mka recoveryimage -j$(nproc --all)
+          mkdir -p /tmp/out_img
+          cp out/target/product/RMX3624/*.img /tmp/out_img/
 
       - name: Upload Red-Fox Recovery Artifact
         uses: actions/upload-artifact@v4
         with:
           name: RedFox-Recovery-RMX3624-v1.0
-          path: ~/work/OrangeFox/out/target/product/RMX3624/*.img
+          path: /tmp/out_img/*.img
