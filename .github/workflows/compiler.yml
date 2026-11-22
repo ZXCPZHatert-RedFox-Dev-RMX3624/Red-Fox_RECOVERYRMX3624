@@ -30,6 +30,8 @@ jobs:
           sudo chmod a+x /usr/local/bin/repo
           sudo curl -L "https://storage.googleapis.com/git-repo-downloads/repo" -o /usr/local/bin/repo
           sudo chmod a+x /usr/local/bin/repo
+          sudo curl -L "https://storage.googleapis.com/git-repo-downloads/repo" -o /usr/local/bin/repo
+          sudo chmod a+x /usr/local/bin/repo
           git config --global user.name "RedFox-Dev"
           git config --global user.email "pavelshiskalov0@gmail.com"
           git config --global color.ui false
