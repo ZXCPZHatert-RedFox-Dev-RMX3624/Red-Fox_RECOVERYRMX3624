@@ -13,10 +13,10 @@ jobs:
       - name: Free Disk Space & Add Swap
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
-          sudo fallocate -l 10G /swapfile
-          sudo chmod 600 /swapfile
-          sudo mkswap /swapfile
-          sudo swapon /swapfile
+          sudo fallocate -l 10G /swapfile_fox
+          sudo chmod 600 /swapfile_fox
+          sudo mkswap /swapfile_fox
+          sudo swapon /swapfile_fox
           df -h
 
       - name: Install Dependencies
