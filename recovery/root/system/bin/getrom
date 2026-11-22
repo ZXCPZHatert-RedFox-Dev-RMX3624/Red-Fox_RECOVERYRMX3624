@@ -1,0 +1,21 @@
+#!/sbin/sh
+if [ -z "$1" ]; then
+    echo "Использование: getrom <прямая_ссылка_на_прошивку.img.xz_или_zip>"
+    exit 1
+fi
+mkdir -p /sdcard/Download
+cd /sdcard/Download || exit 1
+echo "[RedFox Downloader] Скачиваю прошивку в /sdcard/Download..."
+/system/bin/curl -L -k -O "$1"
+FILE=$(ls -t | head -n 1)
+echo "[RedFox Downloader] Скачан файл: $FILE"
+case "$FILE" in
+    *.img.xz)
+        OUT="${FILE%.xz}"
+        echo "[RedFox Downloader] Распаковываю $FILE -> $OUT..."
+        /system/bin/xz -d -k "$FILE" && echo "ГОТОВО! Выбирай $OUT в меню Install -> Install Image -> System Image!"
+        ;;
+    *.zip)
+        echo "ГОТОВО! Выбирай $FILE в меню Install!"
+        ;;
+esac
