@@ -86,10 +86,10 @@ jobs:
           set -e
           mka recoveryimage -j$(nproc --all)
           mkdir -p /tmp/out_img
-          cp out/target/product/RMX3624/*.img /tmp/out_img/
+          find out/target/product -maxdepth 2 \( -name "*.img" -o -name "OrangeFox*.zip" \) -exec cp {} /tmp/out_img/ \;
 
       - name: Upload Red-Fox Recovery Artifact
         uses: actions/upload-artifact@v4
         with:
           name: RedFox-Recovery-RMX3624-v1.0
-          path: /tmp/out_img/*.img
+          path: /tmp/out_img/*
