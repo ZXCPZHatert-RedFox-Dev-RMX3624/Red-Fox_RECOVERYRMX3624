@@ -73,8 +73,10 @@ jobs:
           export ALLOW_MISSING_DEPENDENCIES=true
           export FOX_BUILD_DEVICE=RMX3624
           export LC_ALL="C"
+          set +e
           source build/envsetup.sh
-          lunch twrp_RMX3624-eng
+          lunch twrp_RMX3624-eng || lunch twrp_RMX3624-userdebug || lunch fox_RMX3624-eng
+          set -e
           mka recoveryimage -j$(nproc --all)
           mkdir -p /tmp/out_img
           cp out/target/product/RMX3624/*.img /tmp/out_img/
