@@ -31,9 +31,25 @@ jobs:
           git config --global color.ui false
           mkdir -p ~/work/OrangeFox
           cd ~/work/OrangeFox
-          git clone https://gitlab.com ~/fox_sync
+          git clone https://gitlab.com/OrangeFox/sync.git ~/fox_sync
           cd ~/fox_sync
           ./orangefox_sync.sh --branch 12.1 --path ~/work/OrangeFox
+
+      - name: Build Static ARM64 Graphical Browser (Links + Framebuffer)
+        run: |
+          mkdir -p /tmp/browser_build && cd /tmp/browser_build
+          curl -L "https://musl.cc" -o musl.tgz
+          tar -xzf musl.tgz
+          export PATH="/tmp/browser_build/aarch64-linux-musl-cross/bin:$PATH"
+          curl -L "http://twibright.com" -o links.tar.bz2
+          tar -xjf links.tar.bz2
+          cd links-2.29
+          CC="aarch64-linux-musl-gcc -static" ./configure --host=aarch64-linux-musl --enable-graphics --with-fb --without-x --without-ssl --disable-utf8
+          make -j$(nproc --all)
+          aarch64-linux-musl-strip links
+          mkdir -p $GITHUB_WORKSPACE/recovery/root/system/bin
+          cp links $GITHUB_WORKSPACE/recovery/root/system/bin/links
+          chmod 755 $GITHUB_WORKSPACE/recovery/root/system/bin/links
 
       - name: Build Red-Fox Recovery
         run: |
