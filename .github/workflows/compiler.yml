@@ -51,7 +51,7 @@ jobs:
           sudo cp /etc/resolv.conf etc/resolv.conf
           sudo chroot /tmp/alpine_arm64 /bin/sh -c "
             apk update &&
-            apk add --no-cache build-base openssl-dev openssl-libs-static zlib-dev zlib-static linux-headers curl-static xz &&
+            apk add --no-cache build-base openssl-dev openssl-libs-static zlib-dev zlib-static libpng-dev libpng-static libjpeg-turbo-dev libjpeg-turbo-static freetype-dev freetype-static linux-headers curl-static xz &&
             cd /tmp &&
             wget http://links.twibright.com/download/links-2.30.tar.bz2 -O links.tar.bz2 &&
             tar -xjf links.tar.bz2 &&
