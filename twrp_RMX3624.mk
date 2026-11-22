@@ -12,3 +12,7 @@ PRODUCT_MANUFACTURER := realme
 
 # Настройки RedFox интерфейса
 TW_THEME := portrait_hdpi
+
+TARGET_SCREEN_WIDTH := 720
+TARGET_SCREEN_HEIGHT := 1600
+TW_THEME := portrait_hdpi
