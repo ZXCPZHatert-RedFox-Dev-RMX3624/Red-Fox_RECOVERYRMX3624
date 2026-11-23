@@ -83,7 +83,7 @@ jobs:
           : > build/make/core/artifact_path_requirements.mk
           set +e
           source build/envsetup.sh
-          lunch twrp_RMX3624-eng || lunch twrp_RMX3624-userdebug || lunch fox_RMX3624-eng
+          lunch twrp_RMX3624-eng
           LUNCH_RC=$?
           set -e
           if [ $LUNCH_RC -ne 0 ]; then
