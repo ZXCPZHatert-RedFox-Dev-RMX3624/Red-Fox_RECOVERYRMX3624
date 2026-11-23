@@ -65,6 +65,7 @@ jobs:
       - name: Build Red-Fox Recovery
         shell: bash
         run: |
+          set -x
           FOX_DIR=~/work/OrangeFox
           if [ -d "$FOX_DIR/fox_12.1/build" ]; then FOX_DIR="$FOX_DIR/fox_12.1"; fi
           mkdir -p "$FOX_DIR/device/realme/RMX3624"
