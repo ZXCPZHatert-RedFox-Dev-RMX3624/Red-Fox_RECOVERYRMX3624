@@ -1,4 +1,4 @@
-name: Build Red-Fox Recovery (OrangeFox 12.1) for RMX3624
+name: Build Red-Fox Recovery (OrangeFox 14.1 (A15-A17+)) for RMX3624
 
 on:
   workflow_dispatch:
@@ -24,14 +24,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 libncurses5 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig python3 python-is-python3 cpio aria2
 
-      - name: Cache OrangeFox 12.1 Sources
+      - name: Cache OrangeFox 14.1 (A15-A17+) Sources
         id: cache-ofox
         uses: actions/cache@v4
         with:
           path: ~/work/OrangeFox
-          key: ofox-12.1-sources-v1
+          key: ofox-14.1-sources-v1
 
-      - name: Sync OrangeFox 12.1 Sources
+      - name: Sync OrangeFox 14.1 (A15-A17+) Sources
         if: steps.cache-ofox.outputs.cache-hit != 'true'
         run: |
           sudo curl -L "https://storage.googleapis.com/git-repo-downloads/repo" -o /usr/local/bin/repo
@@ -47,7 +47,7 @@ jobs:
           cd ~/work/OrangeFox
           git clone https://gitlab.com/OrangeFox/sync.git ~/fox_sync
           cd ~/fox_sync
-          ./orangefox_sync.sh --branch 12.1 --path ~/work/OrangeFox
+          ./orangefox_sync.sh --branch 14.1 --path ~/work/OrangeFox
 
       - name: Install ARM64 Browser (Links + HTTPS) & Static Curl
         run: |
@@ -59,14 +59,13 @@ jobs:
           sudo cp /etc/resolv.conf etc/resolv.conf
           sudo chroot /tmp/alpine_arm64 /bin/sh -c "
             apk update &&
-            apk add --no-cache links curl xz ca-certificates
+            apk add --no-cache links curl ca-certificates
           "
-          mkdir -p $GITHUB_WORKSPACE/recovery/root/system/bin $GITHUB_WORKSPACE/recovery/root/lib $GITHUB_WORKSPACE/recovery/root/usr/lib $GITHUB_WORKSPACE/recovery/root/etc/ssl
+          mkdir -p $GITHUB_WORKSPACE/recovery/root/system/bin $GITHUB_WORKSPACE/recovery/root/lib $GITHUB_WORKSPACE/recovery/root/etc/ssl/certs
           sudo cp /tmp/alpine_arm64/usr/bin/links $GITHUB_WORKSPACE/recovery/root/system/bin/links
           sudo cp /tmp/alpine_arm64/usr/bin/curl $GITHUB_WORKSPACE/recovery/root/system/bin/curl
           sudo cp -a /tmp/alpine_arm64/lib/ld-musl-aarch64.so.1 /tmp/alpine_arm64/lib/libz.so* /tmp/alpine_arm64/lib/libcrypto.so* /tmp/alpine_arm64/lib/libssl.so* $GITHUB_WORKSPACE/recovery/root/lib/ || true
-          sudo cp -a /tmp/alpine_arm64/usr/lib/libevent*.so* /tmp/alpine_arm64/usr/lib/libbrotli*.so* /tmp/alpine_arm64/usr/lib/libzstd*.so* /tmp/alpine_arm64/usr/lib/libbz2*.so* /tmp/alpine_arm64/usr/lib/liblzma*.so* /tmp/alpine_arm64/usr/lib/libgpm*.so* $GITHUB_WORKSPACE/recovery/root/usr/lib/ || true
-          sudo cp -r /tmp/alpine_arm64/etc/ssl/* $GITHUB_WORKSPACE/recovery/root/etc/ssl/ || true
+          sudo cp -f /tmp/alpine_arm64/etc/ssl/certs/ca-certificates.crt $GITHUB_WORKSPACE/recovery/root/etc/ssl/certs/ || true
           sudo chown -R $USER:$USER $GITHUB_WORKSPACE/recovery/root
           chmod 755 $GITHUB_WORKSPACE/recovery/root/system/bin/links $GITHUB_WORKSPACE/recovery/root/system/bin/curl
 
@@ -75,7 +74,7 @@ jobs:
         run: |
           set -x
           FOX_DIR=~/work/OrangeFox
-          if [ -d "$FOX_DIR/fox_12.1/build" ]; then FOX_DIR="$FOX_DIR/fox_12.1"; fi
+          if [ -d "$FOX_DIR/fox_14.1/build" ]; then FOX_DIR="$FOX_DIR/fox_14.1"; fi
           mkdir -p "$FOX_DIR/device/realme/RMX3624"
           rsync -a --exclude=".git" "$GITHUB_WORKSPACE/" "$FOX_DIR/device/realme/RMX3624/"
           cd "$FOX_DIR"
@@ -105,6 +104,6 @@ jobs:
       - name: Upload Red-Fox Recovery Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: RedFox-Recovery-RMX3624-v1.0
+          name: RedFox-Recovery-14.1-RMX3624-Browser
           path: /tmp/out_img/
           if-no-files-found: error

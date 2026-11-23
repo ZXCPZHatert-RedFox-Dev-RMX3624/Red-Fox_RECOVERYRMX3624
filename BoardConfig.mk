@@ -176,3 +176,10 @@ BUILD_BROKEN_DUP_RULES := true
 
 BOARD_REALME_DYNAMIC_PARTITIONS_SIZE := 9122611200
 
+
+# Ultra-compact vendor_boot (<24MB total with stock modules) + Browser + sprd_backlight
+TW_EXCLUDE_APEX := true
+TW_EXCLUDE_TWRPAPP := true
+TW_INCLUDE_PYTHON := false
+TW_NO_SCREEN_BLANK := true
+TW_BRIGHTNESS_PATH := "/sys/class/backlight/sprd_backlight/brightness"
