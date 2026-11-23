@@ -4,4 +4,4 @@ PRODUCT_MAKEFILES := \
 COMMON_LUNCH_CHOICES := \
     twrp_RMX3624-user \
     twrp_RMX3624-userdebug \
-    twrp_RMX3624-eng
+    twrp_RMX3624-ap2a-eng
