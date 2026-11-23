@@ -98,7 +98,7 @@ jobs:
             echo "ОШИБКА: lunch не смог выбрать конфигурацию RMX3624!"
             exit 1
           fi
-          mka recoveryimage -j$(nproc --all)
+          mka vendorbootimage -j$(nproc --all)
           mkdir -p /tmp/out_img
           ls -lh "$FOX_DIR/out/target/product/"*/; cp "$FOX_DIR/out/target/product/"*/*.img "$FOX_DIR/out/target/product/"*/*.zip /tmp/out_img/ 2>/dev/null || true; ls -lh /tmp/out_img/
 
