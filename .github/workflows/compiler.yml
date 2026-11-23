@@ -106,4 +106,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: RedFox-Recovery-RMX3624-v1.0
-          path: /tmp/out_img/*
+          path: /tmp/out_img/
+          if-no-files-found: error
