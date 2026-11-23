@@ -73,8 +73,9 @@ jobs:
         shell: bash
         run: |
           set -x
-          FOX_DIR=~/work/OrangeFox
-          if [ -d "$FOX_DIR/fox_14.1/build" ]; then FOX_DIR="$FOX_DIR/fox_14.1"; fi
+          ENV_FILE=$(find ~/work -maxdepth 3 -path "*/build/envsetup.sh" | head -n 1)
+          FOX_DIR=$(dirname $(dirname "$ENV_FILE"))
+          echo "Detected OrangeFox tree at: $FOX_DIR" 
           mkdir -p "$FOX_DIR/device/realme/RMX3624"
           rsync -a --exclude=".git" "$GITHUB_WORKSPACE/" "$FOX_DIR/device/realme/RMX3624/"
           cd "$FOX_DIR"
@@ -90,14 +91,14 @@ jobs:
           : > build/make/core/artifact_path_requirements.mk
           set +e
           source build/envsetup.sh
-          lunch twrp_RMX3624-eng
+          lunch twrp_RMX3624-ap2a-eng || lunch twrp_RMX3624-eng
           LUNCH_RC=$?
           set -e
           if [ $LUNCH_RC -ne 0 ]; then
             echo "ОШИБКА: lunch не смог выбрать конфигурацию RMX3624!"
             exit 1
           fi
-          mka bootimage -j$(nproc --all)
+          mka recoveryimage -j$(nproc --all)
           mkdir -p /tmp/out_img
           ls -lh "$FOX_DIR/out/target/product/"*/; cp "$FOX_DIR/out/target/product/"*/*.img "$FOX_DIR/out/target/product/"*/*.zip "$FOX_DIR/out/target/product/"*/ramdisk-recovery.* /tmp/out_img/ 2>/dev/null || true; ls -lh /tmp/out_img/
 
