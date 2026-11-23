@@ -24,7 +24,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 libncurses5 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig python3 python-is-python3 cpio aria2
 
+      - name: Cache OrangeFox 12.1 Sources
+        id: cache-ofox
+        uses: actions/cache@v4
+        with:
+          path: ~/work/OrangeFox
+          key: ofox-12.1-sources-v1
+
       - name: Sync OrangeFox 12.1 Sources
+        if: steps.cache-ofox.outputs.cache-hit != 'true'
         run: |
           sudo curl -L "https://storage.googleapis.com/git-repo-downloads/repo" -o /usr/local/bin/repo
           sudo chmod a+x /usr/local/bin/repo
