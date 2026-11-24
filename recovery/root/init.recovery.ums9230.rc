@@ -24,6 +24,11 @@ on early-init
     insmod /lib/modules/lcd_bias_adjust.ko
     insmod /lib/modules/himax_mmi.ko
 
+    insmod /lib/modules/chipone-tddi.ko
+    insmod /lib/modules/ilitek.ko
+    insmod /lib/modules/sprd-focaltech.ko
+    insmod /lib/modules/sprd-nt36xxx.ko
+
 on init
     mkdir /config
     mount configfs none /config
