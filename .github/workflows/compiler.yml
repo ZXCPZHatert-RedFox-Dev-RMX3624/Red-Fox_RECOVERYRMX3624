@@ -99,6 +99,7 @@ jobs:
           LUNCH_RC=$?
           set -e
           if [ $LUNCH_RC -ne 0 ]; then
+            TARGET_PRODUCT=fox_RMX3624 TARGET_BUILD_VARIANT=eng build/soong/soong_ui.bash --dumpvars-mode --vars="TARGET_PRODUCT" || true
             echo "ОШИБКА: lunch не смог выбрать конфигурацию RMX3624!"
             cat device/realme/RMX3624/AndroidProducts.mk
             exit 1
