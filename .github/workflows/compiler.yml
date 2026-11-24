@@ -29,7 +29,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/work/OrangeFox
-          key: ofox-14.1-sources-v1
+          key: ofox-14.1-sources-v2
 
       - name: Sync OrangeFox 14.1 (A15-A17+) Sources
         if: steps.cache-ofox.outputs.cache-hit != 'true'
@@ -91,7 +91,9 @@ jobs:
           : > build/make/core/artifact_path_requirements.mk
           set +e
           source build/envsetup.sh
-          lunch twrp_RMX3624-ap2a-eng || lunch twrp_RMX3624-ap2a-eng
+          COMMON_MK=$(find vendor -maxdepth 3 -path "*/config/common.mk" | head -n 1)
+          [ -n "$COMMON_MK" ] && sed -i "s|vendor/twrp/config/common.mk|$COMMON_MK|g" device/realme/RMX3624/twrp_RMX3624.mk
+          lunch twrp_RMX3624-ap2a-eng || lunch twrp_RMX3624-eng || lunch twrp_RMX3624-userdebug
           LUNCH_RC=$?
           set -e
           if [ $LUNCH_RC -ne 0 ]; then
