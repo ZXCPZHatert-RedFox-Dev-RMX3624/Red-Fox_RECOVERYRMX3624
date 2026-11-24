@@ -51,3 +51,4 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_SYSTEM_PROPERTY_BLACKLIST := \
     ro.product.device \
     ro.product.name
+PRODUCT_ENABLE_UFFD_GC := false
