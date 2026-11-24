@@ -96,7 +96,7 @@ jobs:
           REL=$(find build/release/aconfig -maxdepth 2 -name "*.textproto" -o -name "release_configs" 2>/dev/null; ls build/release/build_config/ 2>/dev/null | sed "s/\.scl//g" | grep -v main | head -n 1)
           REL=${REL:-ap2a}
           echo "Detected release target: $REL"
-          lunch twrp_RMX3624-${REL}-eng || lunch twrp_RMX3624-${REL}-userdebug || lunch twrp_RMX3624-trunk_staging-eng
+          lunch fox_RMX3624-ap2a-eng || lunch fox_RMX3624-eng || lunch fox_RMX3624-userdebug || lunch twrp_RMX3624-ap2a-eng || lunch twrp_RMX3624-eng
           LUNCH_RC=$?
           set -e
           if [ $LUNCH_RC -ne 0 ]; then
