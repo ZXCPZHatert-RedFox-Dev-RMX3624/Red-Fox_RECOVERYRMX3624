@@ -1,0 +1,42 @@
+on early-init
+    setprop sys.usb.controller musb-hdrc.0.auto
+    setprop sys.usb.configfs 1
+
+    insmod /lib/modules/unisoc-iommu.ko
+    insmod /lib/modules/sprd-drm.ko
+    insmod /lib/modules/sprd-gsp.ko
+    insmod /lib/modules/apsys-dvfs.ko
+    insmod /lib/modules/extcon-usb-gpio.ko
+    insmod /lib/modules/core.ko
+    insmod /lib/modules/gpio.ko
+    insmod /lib/modules/pinctrl.ko
+    insmod /lib/modules/pinctrl-sprd.ko
+    insmod /lib/modules/pinctrl-sprd-qogirl6.ko
+    insmod /lib/modules/sprd_usbpinmux_qogirl6.ko
+    insmod /lib/modules/phy-sprd-qogirl6.ko
+    insmod /lib/modules/wcn_bsp.ko
+    insmod /lib/modules/focaltech_ft8756_spi_ts.ko
+    insmod /lib/modules/musb_hdrc.ko
+    insmod /lib/modules/musb_sprd.ko
+    insmod /lib/modules/sc2355_sdio_wlan.ko
+    insmod /lib/modules/sc2355_sipc_wlan.ko
+    insmod /lib/modules/mipi_driver.ko
+    insmod /lib/modules/lcd_bias_adjust.ko
+    insmod /lib/modules/himax_mmi.ko
+
+on init
+    mkdir /config
+    mount configfs none /config
+    mkdir /config/usb_gadget/g1 0770 shell shell
+    write /config/usb_gadget/g1/idVendor 0x1782
+    write /config/usb_gadget/g1/idProduct 0x4d00
+    mkdir /config/usb_gadget/g1/strings/0x409 0770
+    write /config/usb_gadget/g1/strings/0x409/serialnumber ${ro.serialno}
+    write /config/usb_gadget/g1/strings/0x409/manufacturer realme
+    write /config/usb_gadget/g1/strings/0x409/product RMX3624
+    mkdir /config/usb_gadget/g1/functions/ffs.adb
+    mkdir /config/usb_gadget/g1/configs/b.1 0777 shell shell
+    mkdir /config/usb_gadget/g1/configs/b.1/strings/0x409 0770 shell shell
+
+on boot
+    setprop sys.usb.config adb
