@@ -148,6 +148,8 @@ TW_BRIGHTNESS_PATH := "/sys/class/backlight/sprd_backlight/brightness"
 
 
 # Vendor Boot Recovery Configuration
+
+# Vendor Boot Recovery Configuration
 BOARD_USES_VENDOR_BOOTIMAGE := true
 BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 0x06400000
 BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
