@@ -96,14 +96,18 @@ jobs:
           ls -la device/realme/RMX3624/ build/release/build_config/ 2>/dev/null || true
           RELS=$(ls build/release/build_config/ 2>/dev/null | sed "s/\.scl//g" | grep -vE "^(main|root|trunk)$" || true)
           for r in $RELS trunk_staging bp2a bp1a ap4a ap3a ap2a; do
-            echo "Trying lunch fox_RMX3624-${r}-eng ..."
-            lunch "fox_RMX3624-${r}-eng" && break
-            lunch "twrp_RMX3624-${r}-eng" && break
+            echo "Trying export TARGET_RELEASE=ap2a
+          lunch fox_RMX3624-${r}-eng ..."
+            export TARGET_RELEASE=ap2a
+          lunch "fox_RMX3624-${r}-eng" && break
+            export TARGET_RELEASE=ap2a
+          lunch "twrp_RMX3624-${r}-eng" && break
           done
           LUNCH_RC=$?
           set -e
           if [ $LUNCH_RC -ne 0 ]; then
-            echo "ОШИБКА: lunch не смог выбрать конфигурацию RMX3624!"
+            echo "ОШИБКА: export TARGET_RELEASE=ap2a
+          lunch не смог выбрать конфигурацию RMX3624!"
             exit 1
           fi
           mka vendorbootimage bootimage -j$(nproc --all)
