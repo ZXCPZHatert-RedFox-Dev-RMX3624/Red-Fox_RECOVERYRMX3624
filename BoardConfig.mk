@@ -185,3 +185,4 @@ TW_BRIGHTNESS_PATH := "/sys/class/backlight/sprd_backlight/brightness"
 
 
 BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 0x06400000
+PRODUCT_ENABLE_UFFD_GC := false
