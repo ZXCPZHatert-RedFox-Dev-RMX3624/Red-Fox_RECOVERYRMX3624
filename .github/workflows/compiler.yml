@@ -92,12 +92,10 @@ jobs:
           set +e
           source build/envsetup.sh
           COMMON_MK=$(find vendor -maxdepth 3 -path "*/config/common.mk" | head -n 1)
-          [ -n "$COMMON_MK" ] && sed -i "s|vendor/twrp/config/common.mk|$COMMON_MK|g" device/realme/RMX3624/twrp_RMX3624.mk
-          REL=$(find build/release/aconfig -maxdepth 2 -name "*.textproto" -o -name "release_configs" 2>/dev/null; ls build/release/build_config/ 2>/dev/null | sed "s/\.scl//g" | grep -v main | head -n 1)
-          REL=${REL:-ap2a}
-          echo "Detected release target: $REL"
-          ls -la build/release/build_config/ 2>/dev/null || true
-          for r in $(ls build/release/build_config/ 2>/dev/null | sed "s/\.scl//g" | grep -vE "^(main|root|trunk)$") trunk_staging bp2a bp1a ap4a ap3a ap2a; do
+          [ -n "$COMMON_MK" ] && sed -i "s|vendor/twrp/config/common.mk|$COMMON_MK|g" device/realme/RMX3624/fox_RMX3624.mk device/realme/RMX3624/twrp_RMX3624.mk
+          ls -la device/realme/RMX3624/ build/release/build_config/ 2>/dev/null || true
+          RELS=$(ls build/release/build_config/ 2>/dev/null | sed "s/\.scl//g" | grep -vE "^(main|root|trunk)$" || true)
+          for r in $RELS trunk_staging bp2a bp1a ap4a ap3a ap2a; do
             echo "Trying lunch fox_RMX3624-${r}-eng ..."
             lunch "fox_RMX3624-${r}-eng" && break
             lunch "twrp_RMX3624-${r}-eng" && break
