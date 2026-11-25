@@ -95,7 +95,7 @@ jobs:
           [ -n "$COMMON_MK" ] && sed -i "s|vendor/twrp/config/common.mk|$COMMON_MK|g" device/realme/RMX3624/fox_RMX3624.mk device/realme/RMX3624/twrp_RMX3624.mk
           ls -la device/realme/RMX3624/ build/release/build_config/ 2>/dev/null || true
           export TARGET_RELEASE=ap2a
-          lunch fox_RMX3624-ap2a-eng || lunch twrp_RMX3624-ap2a-eng
+          lunch fox_RMX3624-eng || lunch fox_RMX3624-bp1a-eng || lunch fox_RMX3624-ap2a-eng
           LUNCH_RC=$?
           set -e
           if [ $LUNCH_RC -ne 0 ]; then
