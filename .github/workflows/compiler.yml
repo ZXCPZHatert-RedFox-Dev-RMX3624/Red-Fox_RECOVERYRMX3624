@@ -80,10 +80,13 @@ jobs:
           export LC_ALL="C"
           sed -i "s/\$(error Build failed)/\$(warning Artifact check bypassed)/g" build/make/core/artifact_path_requirements.mk || true
           : > build/make/core/artifact_path_requirements.mk
+          set +e
+          export FOX_MANIFEST_ROOT="$FOX_DIR"
           source build/envsetup.sh
           COMMON_MK=$(find vendor -maxdepth 3 -path "*/config/common.mk" | head -n 1)
           [ -n "$COMMON_MK" ] && sed -i "s|vendor/twrp/config/common.mk|$COMMON_MK|g" device/realme/RMX3624/fox_RMX3624.mk device/realme/RMX3624/twrp_RMX3624.mk
           lunch fox_RMX3624-eng || lunch twrp_RMX3624-eng || lunch omni_RMX3624-eng
+          set -e
           mka vendorbootimage bootimage -j$(nproc --all)
           mkdir -p /tmp/out_img
           cp "$FOX_DIR/out/target/product/"*/*.img "$FOX_DIR/out/target/product/"*/*.zip "$FOX_DIR/out/target/product/"*/ramdisk-recovery.* /tmp/out_img/ 2>/dev/null || true
