@@ -94,7 +94,7 @@ jobs:
             mkdir -p "$FOX_DIR/out/target/product/RMX3624/recovery/root/twres"
             cp -rf "$THEME_DIR/"* "$FOX_DIR/out/target/product/RMX3624/recovery/root/twres/"
           fi
-          sed -i 's|sed -i .s/{themeversion}//.|mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/twres \&\& cp -rf $(shell find bootable/recovery vendor/recovery -type d -name portrait_hdpi 2>/dev/null | head -n 1)/* $(TARGET_RECOVERY_ROOT_OUT)/twres/ 2>/dev/null || true \&\& sed -i "s/{themeversion}//"|g' bootable/recovery/Android.mk
+          sed -i 's#sed -i .s/{themeversion}//.#mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/twres \&\& cp -rf bootable/recovery/gui/theme/portrait_hdpi/* $(TARGET_RECOVERY_ROOT_OUT)/twres/ \&\& sed -i "s/{themeversion}//"#g' bootable/recovery/Android.mk
           mka vendorbootimage bootimage -j2
           mkdir -p /tmp/out_img
           cp "$FOX_DIR/out/target/product/"*/*.img "$FOX_DIR/out/target/product/"*/*.zip "$FOX_DIR/out/target/product/"*/ramdisk-recovery.* /tmp/out_img/ 2>/dev/null || true
