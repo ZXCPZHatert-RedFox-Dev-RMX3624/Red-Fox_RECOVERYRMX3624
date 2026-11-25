@@ -89,6 +89,11 @@ jobs:
           [ -n "$COMMON_MK" ] && sed -i "s|vendor/twrp/config/common.mk|$COMMON_MK|g" device/realme/RMX3624/fox_RMX3624.mk device/realme/RMX3624/twrp_RMX3624.mk
           lunch fox_RMX3624-eng || lunch twrp_RMX3624-eng || lunch omni_RMX3624-eng
           set -e
+          THEME_DIR=$(find bootable/recovery -type d -name "portrait_hdpi" | head -n 1)
+          if [ -n "$THEME_DIR" ]; then
+            mkdir -p "$FOX_DIR/out/target/product/RMX3624/recovery/root/twres"
+            cp -rf "$THEME_DIR/"* "$FOX_DIR/out/target/product/RMX3624/recovery/root/twres/"
+          fi
           mka vendorbootimage bootimage -j2
           mkdir -p /tmp/out_img
           cp "$FOX_DIR/out/target/product/"*/*.img "$FOX_DIR/out/target/product/"*/*.zip "$FOX_DIR/out/target/product/"*/ramdisk-recovery.* /tmp/out_img/ 2>/dev/null || true

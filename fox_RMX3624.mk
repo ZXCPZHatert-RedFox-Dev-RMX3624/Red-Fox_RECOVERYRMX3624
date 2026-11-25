@@ -1,3 +1,11 @@
+OF_SCREEN_H := 1600
+OF_STATUS_H := 60
+OF_STATUS_INDENT_LEFT := 48
+OF_STATUS_INDENT_RIGHT := 48
+OF_MAINTAINER := RedFox-Dev
+FOX_MAINTAINER_PATCH_VERSION := 1
+FOX_BUILD_TYPE := Stable
+
 $(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/aosp_base.mk)
 $(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/base.mk)
