@@ -1,4 +1,3 @@
-PRODUCT_BUILD_VENDOR_BOOT_IMAGE := true
 $(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 $(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/aosp_base.mk)
@@ -23,3 +22,4 @@ TW_DEFAULT_BRIGHTNESS := 120
 PRODUCT_ENFORCE_ARTIFACT_PATH_REQUIREMENTS := false
 PRODUCT_ENABLE_UFFD_GC := false
 
+PRODUCT_BUILD_VENDOR_BOOT_IMAGE := true
