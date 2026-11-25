@@ -73,7 +73,8 @@ jobs:
           unset TARGET_RELEASE
           export ALLOW_MISSING_DEPENDENCIES=true
           export FOX_BUILD_DEVICE=RMX3624
-          export TW_THEME=portrait_hdpi
+          export OF_SCREEN_H=1600
+          export OF_STATUS_H=60
           export TARGET_SCREEN_WIDTH=720
           export TARGET_SCREEN_HEIGHT=1600
           export TW_MAX_BRIGHTNESS=4095
