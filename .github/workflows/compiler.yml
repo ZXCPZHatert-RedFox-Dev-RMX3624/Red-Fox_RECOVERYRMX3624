@@ -122,8 +122,6 @@ jobs:
 
           THEME_DIR=$(find bootable/ vendor/ -type d -name "portrait_hdpi" | head -n 1)
           mkdir -p out/target/product/RMX3624/recovery/root/twres && [ -n "$THEME_DIR" ] && cp -rf "$THEME_DIR"/* out/target/product/RMX3624/recovery/root/twres/
-          grep -rl "themeversion" bootable/ vendor/ 2>/dev/null | xargs -r sed -i 's|themeversion}//" \$(TARGET_RECOVERY_ROOT_OUT)/twres/ui.xml|themeversion}//" \$(TARGET_RECOVERY_ROOT_OUT)/twres/ui.xml || true|g'
-          grep -rl "themeversion" bootable/ vendor/ 2>/dev/null | xargs -r grep -n "themeversion"
           mka recoveryimage vendorbootimage bootimage -j$(nproc --all)
 
           mkdir -p /tmp/out_img
