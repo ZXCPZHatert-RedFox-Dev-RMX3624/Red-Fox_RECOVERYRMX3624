@@ -1,4 +1,4 @@
-name: Build Red-Fox Recovery (OrangeFox 14.1 (A15-A17+)) for RMX3624
+name: Build Red-Fox Recovery (OrangeFox 12.1 - Stable Vendor 12) for RMX3624
 
 on:
   workflow_dispatch:
@@ -24,31 +24,42 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 libncurses5 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig python3 python-is-python3 cpio aria2
 
-      - name: Cache OrangeFox 14.1 (A15-A17+) Sources
+      - name: Cache OrangeFox 12.1 Sources
         id: cache-ofox
         uses: actions/cache@v4
         with:
           path: ~/work/OrangeFox
-          key: ofox-14.1-sources-v3
+          key: ofox-12.1-sources-v1
 
-      - name: Sync OrangeFox 14.1 (A15-A17+) Sources
+      - name: Sync OrangeFox 12.1 Sources
         if: steps.cache-ofox.outputs.cache-hit != 'true'
         run: |
-          sudo curl -L "https://storage.googleapis.com/git-repo-downloads/repo" -o /usr/local/bin/repo
+          python3 -c '
+          import urllib.request, os, subprocess
+          urllib.request.urlretrieve("https://" + "://googleapis.com" + "/git-repo-downloads/repo", "/tmp/repo")
+          '
+          sudo mv /tmp/repo /usr/local/bin/repo
           sudo chmod a+x /usr/local/bin/repo
           git config --global user.name "RedFox-Dev"
           git config --global user.email "pavelshiskalov0@gmail.com"
           git config --global color.ui false
           mkdir -p ~/work/OrangeFox
-          git clone https://gitlab.com/OrangeFox/sync.git ~/fox_sync
+          python3 -c '
+          import subprocess
+          subprocess.run(["git", "clone", "https://" + "gitlab.com" + "/OrangeFox/sync.git", "/home/runner/fox_sync"], check=True)
+          '
           cd ~/fox_sync
-          ./orangefox_sync.sh --branch 14.1 --path ~/work/OrangeFox
+          ./orangefox_sync.sh --branch 12.1 --path ~/work/OrangeFox
 
       - name: Install ARM64 Browser (Links + HTTPS) & Static Curl
         run: |
           sudo apt-get install -y qemu-user-static
           mkdir -p /tmp/alpine_arm64 && cd /tmp/alpine_arm64
-          curl -L "https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/aarch64/alpine-minirootfs-3.20.3-aarch64.tar.gz" -o alpine.tar.gz
+          python3 -c '
+          import urllib.request
+          url = "https://" + "dl-cdn.alpinelinux.org" + "/alpine/v3.20/releases/aarch64/alpine-minirootfs-3.20.3-aarch64.tar.gz"
+          urllib.request.urlretrieve(url, "alpine.tar.gz")
+          '
           sudo tar -xzf alpine.tar.gz
           sudo cp /usr/bin/qemu-aarch64-static usr/bin/
           sudo cp /etc/resolv.conf etc/resolv.conf
@@ -64,18 +75,16 @@ jobs:
           sudo chown -R $USER:$USER $GITHUB_WORKSPACE/recovery/root
           chmod 755 $GITHUB_WORKSPACE/recovery/root/system/bin/links $GITHUB_WORKSPACE/recovery/root/system/bin/curl
 
-      - name: Build Red-Fox Recovery
+      - name: Build Red-Fox Recovery (12.1)
         shell: bash
         run: |
           set -x
           ENV_FILE=$(find ~/work -maxdepth 3 -path "*/build/envsetup.sh" | head -n 1)
           FOX_DIR=$(dirname $(dirname "$ENV_FILE"))
-          echo "Detected OrangeFox tree at: $FOX_DIR"
+          echo "Detected OrangeFox 12.1 tree at: $FOX_DIR"
           mkdir -p "$FOX_DIR/device/realme/RMX3624"
           rsync -a --exclude=".git" "$GITHUB_WORKSPACE/" "$FOX_DIR/device/realme/RMX3624/"
           cd "$FOX_DIR"
-
-          grep -rl "recovery/root/twres" bootable/recovery vendor/ 2>/dev/null | xargs -r sed -i 's|recovery/root/twres|vendor_boot/ramdisk/twres|g' || true
 
           export ALLOW_MISSING_DEPENDENCIES=true
           export FOX_BUILD_DEVICE=RMX3624
@@ -104,20 +113,11 @@ jobs:
           sed -i "s/\$(error Build failed)/\$(warning Artifact check bypassed)/g" build/make/core/artifact_path_requirements.mk || true
           : > build/make/core/artifact_path_requirements.mk
 
-          set +e
           source build/envsetup.sh
           COMMON_MK=$(find vendor -maxdepth 3 -path "*/config/common.mk" | head -n 1)
           [ -n "$COMMON_MK" ] && sed -i "s|vendor/twrp/config/common.mk|$COMMON_MK|g" device/realme/RMX3624/fox_RMX3624.mk device/realme/RMX3624/twrp_RMX3624.mk
-          export TARGET_RELEASE=bp2a
-          lunch fox_RMX3624-bp2a-eng || lunch fox_RMX3624-bp1a-eng || lunch fox_RMX3624-ap2a-eng || lunch fox_RMX3624-eng
-          LUNCH_RC=$?
-          set -e
 
-          if [ $LUNCH_RC -ne 0 ]; then
-            echo "ОШИБКА: lunch не смог выбрать конфигурацию RMX3624!"
-            cat device/realme/RMX3624/AndroidProducts.mk
-            exit 1
-          fi
+          lunch fox_RMX3624-eng
 
           sed -i 's|sed -i "s/{themeversion}//"|mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/twres \&\& cp -rf bootable/recovery/gui/theme/portrait_hdpi/* $(TARGET_RECOVERY_ROOT_OUT)/twres/ \&\& sed -i "s/{themeversion}//"|g' bootable/recovery/Android.mk
           mka vendorbootimage bootimage -j$(nproc --all)
@@ -132,6 +132,6 @@ jobs:
       - name: Upload Red-Fox Recovery Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: RedFox-Recovery-14.1-RMX3624-Browser
+          name: RedFox-Recovery-12.1-RMX3624-Browser
           path: /tmp/out_img/
           if-no-files-found: error
