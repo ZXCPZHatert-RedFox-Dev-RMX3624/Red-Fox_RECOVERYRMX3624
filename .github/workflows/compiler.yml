@@ -117,7 +117,7 @@ jobs:
           set -e
 
           sed -i 's|sed -i "s/{themeversion}//"|mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/twres \&\& cp -rf bootable/recovery/gui/theme/portrait_hdpi/* $(TARGET_RECOVERY_ROOT_OUT)/twres/ \&\& sed -i "s/{themeversion}//"|g' bootable/recovery/Android.mk
-          mka recoveryimage -j$(nproc --all)
+          mka recoveryimage vendorbootimage bootimage -j$(nproc --all)
 
           mkdir -p /tmp/out_img
           find "$FOX_DIR/out/target/product/" -maxdepth 2 \( -name "*.img" -o -name "*.zip" \) -exec cp {} /tmp/out_img/ \;
