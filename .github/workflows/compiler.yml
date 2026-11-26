@@ -119,6 +119,15 @@ jobs:
             exit 1
           fi
 
+          python3 -c '
+mk = "bootable/recovery/Android.mk"
+t = open(mk).read()
+old = "sed -i \"s/{themeversion}//\""
+new = "mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/twres && cp -rf bootable/recovery/gui/theme/portrait_hdpi/* $(TARGET_RECOVERY_ROOT_OUT)/twres/ && " + old
+if old in t and "cp -rf bootable/recovery/gui/theme/portrait_hdpi" not in t:
+    open(mk, "w").write(t.replace(old, new))
+    print("Patched bootable/recovery/Android.mk successfully!")
+'
           mka vendorbootimage bootimage -j$(nproc --all)
 
           mkdir -p /tmp/out_img
