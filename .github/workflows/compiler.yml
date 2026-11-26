@@ -120,16 +120,7 @@ jobs:
             exit 1
           fi
 
-          python3 - << 'PY'
-mk = "bootable/recovery/Android.mk"
-txt = open(mk).read()
-needle = "sed -i \"s/{themeversion}//\""
-assert needle in txt, "Needle not found in bootable/recovery/Android.mk!"
-txt = txt.replace(needle, "mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/twres && cp -rf bootable/recovery/gui/theme/portrait_hdpi/* $(TARGET_RECOVERY_ROOT_OUT)/twres/ && " + needle, 1)
-open(mk, "w").write(txt)
-print("VERIFIED: Patched bootable/recovery/Android.mk successfully!")
-PY
-          grep -n "portrait_hdpi" bootable/recovery/Android.mk
+          python3 -c 'mk="bootable/recovery/Android.mk"; t=open(mk).read(); n="sed -i \"s/{themeversion}//\""; assert n in t; open(mk,"w").write(t.replace(n,"mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/twres && cp -rf bootable/recovery/gui/theme/portrait_hdpi/* $(TARGET_RECOVERY_ROOT_OUT)/twres/ && "+n,1))' && grep -n portrait_hdpi bootable/recovery/Android.mk
           mka recoveryimage vendorbootimage bootimage -j$(nproc --all)
 
           mkdir -p /tmp/out_img
