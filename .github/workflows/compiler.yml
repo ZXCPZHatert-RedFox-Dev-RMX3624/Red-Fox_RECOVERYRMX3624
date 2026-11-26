@@ -115,6 +115,10 @@ jobs:
 
           lunch fox_RMX3624-eng
           set -e
+          if [ "$TARGET_PRODUCT" != "fox_RMX3624" ]; then
+            echo "ERROR: TARGET_PRODUCT is $TARGET_PRODUCT instead of fox_RMX3624!"
+            exit 1
+          fi
 
           sed -i 's|sed -i "s/{themeversion}//"|mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/twres \&\& cp -rf bootable/recovery/gui/theme/portrait_hdpi/* $(TARGET_RECOVERY_ROOT_OUT)/twres/ \&\& sed -i "s/{themeversion}//"|g' bootable/recovery/Android.mk
           mka recoveryimage vendorbootimage bootimage -j$(nproc --all)
