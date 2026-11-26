@@ -52,7 +52,6 @@ BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := erofs
 # Prebuilt Kernel / DTB / DTBO from Device Tree
 TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/prebuilt/Image.gz
 TARGET_PREBUILT_DTB := $(LOCAL_PATH)/prebuilt/dtb.img
-BOARD_PREBUILT_DTBOIMAGE := $(LOCAL_PATH)/prebuilt/dtbo.img
 
 # Hardware, Display (720x1600, 4095 backlight) & Touch (chipone-tddi)
 TW_THEME := portrait_hdpi
