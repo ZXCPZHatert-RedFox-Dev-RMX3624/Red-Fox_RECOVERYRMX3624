@@ -120,7 +120,10 @@ jobs:
             exit 1
           fi
 
-          python3 -c 'mk="bootable/recovery/Android.mk"; t=open(mk).read(); n="sed -i \"s/{themeversion}//\""; assert n in t; open(mk,"w").write(t.replace(n,"mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/twres && cp -rf bootable/recovery/gui/theme/portrait_hdpi/* $(TARGET_RECOVERY_ROOT_OUT)/twres/ && "+n,1))' && grep -n portrait_hdpi bootable/recovery/Android.mk
+          THEME_DIR=$(find bootable/ vendor/ -type d -name "portrait_hdpi" | head -n 1)
+          mkdir -p out/target/product/RMX3624/recovery/root/twres && [ -n "$THEME_DIR" ] && cp -rf "$THEME_DIR"/* out/target/product/RMX3624/recovery/root/twres/
+          grep -rl "themeversion" bootable/ vendor/ 2>/dev/null | xargs -r sed -i 's|themeversion}//" \$(TARGET_RECOVERY_ROOT_OUT)/twres/ui.xml|themeversion}//" \$(TARGET_RECOVERY_ROOT_OUT)/twres/ui.xml || true|g'
+          grep -rl "themeversion" bootable/ vendor/ 2>/dev/null | xargs -r grep -n "themeversion"
           mka recoveryimage vendorbootimage bootimage -j$(nproc --all)
 
           mkdir -p /tmp/out_img
