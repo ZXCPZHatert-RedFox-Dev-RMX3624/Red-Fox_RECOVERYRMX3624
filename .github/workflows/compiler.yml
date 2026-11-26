@@ -108,8 +108,8 @@ jobs:
           source build/envsetup.sh
           COMMON_MK=$(find vendor -maxdepth 3 -path "*/config/common.mk" | head -n 1)
           [ -n "$COMMON_MK" ] && sed -i "s|vendor/twrp/config/common.mk|$COMMON_MK|g" device/realme/RMX3624/fox_RMX3624.mk device/realme/RMX3624/twrp_RMX3624.mk
-          export TARGET_RELEASE=ap2a
-          lunch fox_RMX3624-eng || lunch fox_RMX3624-bp1a-eng || lunch fox_RMX3624-ap2a-eng
+          export TARGET_RELEASE=bp2a
+          lunch fox_RMX3624-bp2a-eng || lunch fox_RMX3624-bp1a-eng || lunch fox_RMX3624-ap2a-eng || lunch fox_RMX3624-eng
           LUNCH_RC=$?
           set -e
 
