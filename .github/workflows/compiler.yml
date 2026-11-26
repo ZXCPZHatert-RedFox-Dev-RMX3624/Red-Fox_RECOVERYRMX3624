@@ -120,9 +120,7 @@ jobs:
           mka recoveryimage vendorbootimage bootimage -j$(nproc --all)
 
           mkdir -p /tmp/out_img
-          find "$FOX_DIR/out/target/product/" -maxdepth 2 \( -name "*.img" -o -name "*.zip" \) -exec cp {} /tmp/out_img/ \;
-          cp "$FOX_DIR/out/target/product/"*/boot.img /tmp/out_img/ 2>/dev/null || true
-          cp "$FOX_DIR/out/target/product/"*/*.zip /tmp/out_img/ 2>/dev/null || true
+          find "$FOX_DIR/out/target/product/" -maxdepth 2 -type f \( -name "*.img" -o -name "*.zip" \) -exec cp -v {} /tmp/out_img/ \;
           ls -lh /tmp/out_img/
           rm -rf "$FOX_DIR/out"
 
