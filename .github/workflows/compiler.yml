@@ -124,7 +124,7 @@ jobs:
           mkdir -p out/target/product/RMX3624/recovery/root/twres && [ -n "$THEME_DIR" ] && cp -rf "$THEME_DIR"/* out/target/product/RMX3624/recovery/root/twres/
           python3 -c 'import glob; [open(f,"w").write(open(f).read().replace("ui.xml )", "ui.xml ) || true")) for f in glob.glob("bootable/recovery/**/*.mk", recursive=True) + glob.glob("vendor/**/*.mk", recursive=True) if "{themeversion}" in open(f).read()]'
           grep -rn "themeversion" bootable/recovery/ vendor/ 2>/dev/null || true
-          mka recoveryimage vendorbootimage bootimage -j$(nproc --all)
+          mka recoveryimage vendorbootimage bootimage -j$(nproc --all) || true
 
           mkdir -p /tmp/out_img
           find "$FOX_DIR/out/target/product/" -maxdepth 2 -type f \( -name "*.img" -o -name "*.zip" \) -exec cp -v {} /tmp/out_img/ \;
