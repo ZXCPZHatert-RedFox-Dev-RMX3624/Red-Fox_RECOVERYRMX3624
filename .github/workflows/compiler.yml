@@ -29,7 +29,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/work/OrangeFox
-          key: ofox-12.1-sources-v1
+          key: ofox-12.1-sources-v2
 
       - name: Sync OrangeFox 12.1 Sources
         if: steps.cache-ofox.outputs.cache-hit != 'true'
@@ -113,11 +113,13 @@ jobs:
           sed -i "s/\$(error Build failed)/\$(warning Artifact check bypassed)/g" build/make/core/artifact_path_requirements.mk || true
           : > build/make/core/artifact_path_requirements.mk
 
+          set +e
           source build/envsetup.sh
           COMMON_MK=$(find vendor -maxdepth 3 -path "*/config/common.mk" | head -n 1)
           [ -n "$COMMON_MK" ] && sed -i "s|vendor/twrp/config/common.mk|$COMMON_MK|g" device/realme/RMX3624/fox_RMX3624.mk device/realme/RMX3624/twrp_RMX3624.mk
 
           lunch fox_RMX3624-eng
+          set -e
 
           sed -i 's|sed -i "s/{themeversion}//"|mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/twres \&\& cp -rf bootable/recovery/gui/theme/portrait_hdpi/* $(TARGET_RECOVERY_ROOT_OUT)/twres/ \&\& sed -i "s/{themeversion}//"|g' bootable/recovery/Android.mk
           mka vendorbootimage bootimage -j$(nproc --all)
